@@ -30,6 +30,10 @@ conda create --name hotel_management python=3.10
 conda activate hotel_management
 ```
 
+or Use 
+```
+python -m venv .venv
+```
 ---
 
 ### 2️⃣ Install Dependencies
