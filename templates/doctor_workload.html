@@ -51,7 +51,7 @@
                                         {% if apt.appointment_date %}
                                             {{ apt.appointment_date.strftime('%Y-%m-%d %H:%M') }}
                                         {% else %}
-                                            -
+                                            - <!-- No date available THERE IS a " - " here -->
                                         {% endif %}
                                     </td>
                                     <td>{{ apt.patient_name or '-' }}</td>
