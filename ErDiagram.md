@@ -15,6 +15,37 @@ erDiagram
     upcoming_appointments_view ||--|{ APPOINTMENT : "shows future"
     patient_medical_history_view ||--|{ PATIENT : "shows history"
 
+    %% Database Functions and Procedures
+    calculate_age ||--|{ PATIENT : "computes for"
+    get_doctor_appointment_count ||--|{ DOCTOR : "counts for"
+    schedule_appointment ||--|{ APPOINTMENT : "creates"
+    complete_appointment_with_billing ||--|| APPOINTMENT : "completes"
+
+    calculate_age {
+        DATE dob "Input"
+        INT age "Output"
+    }
+
+    get_doctor_appointment_count {
+        INT doctor_id "Input"
+        VARCHAR status "Input (optional)"
+        INT count "Output"
+    }
+
+    schedule_appointment {
+        INT patient_id "Input"
+        INT doctor_id "Input"
+        DATETIME appointment_date "Input"
+        TEXT reason "Input"
+    }
+
+    complete_appointment_with_billing {
+        INT appointment_id "Input"
+        TEXT diagnosis "Input"
+        TEXT treatment "Input"
+        DECIMAL amount "Input"
+    }
+
     PATIENT {
         INT patient_id PK "Patient ID"
         VARCHAR name "Name"
@@ -48,7 +79,6 @@ erDiagram
         VARCHAR status "Status (Scheduled, Completed, Canceled)"
         TEXT reason "Reason for Visit"
     }
-
     MEDICAL_RECORD {
         INT record_id PK "Record ID"
         INT patient_id FK "Patient ID"
@@ -61,8 +91,9 @@ erDiagram
         INT bill_id PK "Bill ID"
         INT appointment_id FK "Appointment ID"
         INT patient_id FK "Patient ID"
-        DECIMAL amount "Amount Due"
+        DECIMAL amount "Amount Due (non-negative)"
         DATETIME bill_date "Billing Date"
+        DATETIME paid_date "Date of Payment (optional)"
         ENUM status "Status (Paid, Unpaid)"
     }
 
@@ -116,3 +147,19 @@ erDiagram
 *   A DEPARTMENT employs multiple DOCTORS.
 *   An APPOINTMENT generates one BILLING record.
 *   A MEDICAL\_RECORD can inform BILLING (e.g., for procedures performed).
+
+**Indexes:**
+
+*   **Doctor:** idx_doctor_department (department_id)
+*   **Appointment:** 
+    * idx_appointment_patient (patient_id)
+    * idx_appointment_doctor (doctor_id)
+    * idx_appointment_date (appointment_date)
+*   **Medical Record:**
+    * idx_medical_record_patient (patient_id)
+    * idx_medical_record_doctor (doctor_id)
+    * idx_medical_record_date (visit_date)
+*   **Billing:**
+    * idx_billing_appointment (appointment_id)
+    * idx_billing_patient (patient_id)
+    * idx_billing_date (bill_date)
