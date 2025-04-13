@@ -1,0 +1,80 @@
+{% extends "layout.html" %} {% block content %}
+<div class="container">
+  <div class="row mb-4">
+    <div class="col">
+      <h2>Appointments</h2>
+    </div>
+    <div class="col text-end">
+      <a href="{{ url_for('schedule_appointment') }}" class="btn btn-primary">
+        Schedule New Appointment
+      </a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      {% if appointments %}
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>Date & Time</th>
+              <th>Patient</th>
+              <th>Doctor</th>
+              <th>Department</th>
+              <th>Reason</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for apt in appointments %}
+            <tr>
+              <td>{{ apt.appointment_date.strftime('%Y-%m-%d %H:%M') }}</td>
+              <td>{{ apt.patient_name }}</td>
+              <td>{{ apt.doctor_name }}</td>
+              <td>{{ apt.department_name }}</td>
+              <td>{{ apt.reason }}</td>
+              <td>
+                <span
+                  class="badge bg-{% if apt.status == 'Scheduled' %}primary{% elif apt.status == 'Completed' %}success{% else %}danger{% endif %}"
+                >
+                  {{ apt.status }}
+                </span>
+              </td>
+              <td>
+                {% if apt.status == 'Scheduled' %}
+                <div class="btn-group" role="group">
+                  <a
+                    href="{{ url_for('complete_appointment', appointment_id=apt.appointment_id) }}"
+                    class="btn btn-sm btn-success"
+                    >Complete</a
+                  >
+                  <form
+                    action="{{ url_for('cancel_appointment', appointment_id=apt.appointment_id) }}"
+                    method="POST"
+                    class="d-inline"
+                  >
+                    <button
+                      type="submit"
+                      class="btn btn-sm btn-danger"
+                      onclick="return confirm('Are you sure you want to cancel this appointment?')"
+                    >
+                      Cancel
+                    </button>
+                  </form>
+                </div>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <p class="text-muted">No appointments found.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

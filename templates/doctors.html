@@ -1,0 +1,62 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h2>Doctors Directory</h2>
+        </div>
+        <div class="col text-end">
+            <a href="{{ url_for('doctor_workload') }}" class="btn btn-info">
+                View Workload
+            </a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            {% if doctors %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Specialization</th>
+                            <th>Department</th>
+                            <th>Contact</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for doctor in doctors %}
+                        <tr>
+                            <td>{{ doctor.doctor_name }}</td>
+                            <td>{{ doctor.specialization }}</td>
+                            <td>{{ doctor.department_name }}</td>
+                            <td>
+                                <p class="mb-0"><i class="bi bi-telephone"></i> {{ doctor.phone }}</p>
+                                <small class="text-muted"><i class="bi bi-envelope"></i> {{ doctor.email }}</small>
+                            </td>
+                            <td>
+                                <a href="{{ url_for('schedule_appointment') }}?doctor_id={{ doctor.doctor_id }}" 
+                                   class="btn btn-sm btn-primary">
+                                    Schedule Appointment
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-muted">No doctors found.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<!-- Add Bootstrap Icons for the contact information icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+{% endblock %}

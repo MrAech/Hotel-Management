@@ -1,0 +1,71 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h2>Patients Directory</h2>
+        </div>
+        <div class="col text-end">
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPatientModal">
+                Add New Patient
+            </button>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            {% if patients %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Age</th>
+                            <th>Gender</th>
+                            <th>Email</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for patient in patients %}
+                        <tr>
+                            <td>{{ patient.name }}</td>
+                            <td>{{ patient.age }}</td>
+                            <td>{{ patient.gender }}</td>
+                            <td>{{ patient.email }}</td>
+                            <td>                                
+                                <a href="{{ url_for('patient_history', patient_id=patient.patient_id) }}" 
+                                   class="btn btn-sm btn-info">View History</a>
+                                <a href="#" class="btn btn-sm btn-primary"
+                                   onclick="scheduleForPatient({{ patient.patient_id }}, '{{ patient.name }}')">
+                                    Schedule
+                                </a>
+                                <form method="POST" 
+                                      action="{{ url_for('delete_patient', patient_id=patient.patient_id) }}"
+                                      class="d-inline"
+                                      onsubmit="return confirm('Are you sure you want to delete {{ patient.name }}? This will remove all their records.');">
+                                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-muted">No patients registered.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function scheduleForPatient(patientId, patientName) {
+        // Redirect to appointment scheduling with patient pre-selected
+        window.location.href = "{{ url_for('schedule_appointment') }}?patient_id=" + patientId;
+    }
+</script>
+{% endblock %}

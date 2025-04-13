@@ -1,0 +1,80 @@
+{% extends "layout.html" %} {% block content %}
+<div class="container">
+  <div class="row mb-4">
+    <div class="col">
+      <h2>Complete Appointment</h2>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <form method="POST">
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <h4>Appointment Details</h4>
+            <p><strong>Patient:</strong> {{ appointment.patient_name }}</p>
+            <p><strong>Doctor:</strong> {{ appointment.doctor_name }}</p>
+            <p>
+              <strong>Date:</strong> {{
+              appointment.appointment_date.strftime('%Y-%m-%d %H:%M') }}
+            </p>
+            <p><strong>Reason:</strong> {{ appointment.reason }}</p>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="diagnosis" class="form-label">Diagnosis</label>
+            <textarea
+              class="form-control"
+              id="diagnosis"
+              name="diagnosis"
+              rows="3"
+              required
+            ></textarea>
+          </div>
+
+          <div class="col-md-6">
+            <label for="treatment" class="form-label">Treatment Plan</label>
+            <textarea
+              class="form-control"
+              id="treatment"
+              name="treatment"
+              rows="3"
+              required
+            ></textarea>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="amount" class="form-label">Billing Amount (₹)</label>
+            <input
+              type="number"
+              class="form-control"
+              id="amount"
+              name="amount"
+              min="0"
+              step="0.01"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <button type="submit" class="btn btn-primary">
+              Complete Appointment
+            </button>
+            <a
+              href="{{ url_for('list_appointments') }}"
+              class="btn btn-secondary"
+              >Cancel</a
+            >
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

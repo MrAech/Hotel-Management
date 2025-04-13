@@ -1,0 +1,68 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h2>Schedule Appointment</h2>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <form method="POST" action="{{ url_for('schedule_appointment') }}">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="patient_id" class="form-label">Patient</label>
+                        <select name="patient_id" id="patient_id" class="form-select" required>
+                            <option value="">Select Patient</option>
+                            {% for patient in patients %}
+                            <option value="{{ patient.patient_id }}" {% if request.args.get('patient_id')|int == patient.patient_id %}selected{% endif %}>
+                                {{ patient.name }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <label for="doctor_id" class="form-label">Doctor</label>
+                        <select name="doctor_id" id="doctor_id" class="form-select" required>
+                            <option value="">Select Doctor</option>
+                            {% for doctor in doctors %}
+                            <option value="{{ doctor.doctor_id }}">{{ doctor.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="appointment_date" class="form-label">Appointment Date & Time</label>
+                        <input type="datetime-local" class="form-control" id="appointment_date" 
+                               name="appointment_date" required min="{{ now.strftime('%Y-%m-%dT%H:%M') }}">
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <label for="reason" class="form-label">Reason for Visit</label>
+                        <textarea class="form-control" id="reason" name="reason" rows="3"></textarea>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <button type="submit" class="btn btn-primary">Schedule Appointment</button>
+                        <a href="{{ url_for('list_appointments') }}" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Set minimum date to today
+    document.getElementById('appointment_date').min = new Date().toISOString().slice(0,16);
+</script>
+{% endblock %}

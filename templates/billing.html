@@ -1,0 +1,111 @@
+{% extends "layout.html" %} {% block content %}
+<div class="container">
+  <div class="row mb-4">
+    <div class="col">
+      <h2>Billing Management</h2>
+    </div>
+  </div>
+
+  <div class="row mb-4">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <ul class="nav nav-tabs card-header-tabs">
+            <li class="nav-item">
+              <a class="nav-link active" href="#unpaid" data-bs-toggle="tab"
+                >Unpaid Bills</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#paid" data-bs-toggle="tab"
+                >Paid Bills</a
+              >
+            </li>
+          </ul>
+        </div>
+        <div class="card-body">
+          <div class="tab-content">
+            <div class="tab-pane fade show active" id="unpaid">
+              {% if unpaid_bills %}
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Bill ID</th>
+                      <th>Patient</th>
+                      <th>Service Date</th>
+                      <th>Amount (₹)</th>
+                      <th>Doctor</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for bill in unpaid_bills %}
+                    <tr>
+                      <td>{{ bill.bill_id }}</td>
+                      <td>{{ bill.patient_name }}</td>
+                      <td>{{ bill.bill_date.strftime('%Y-%m-%d') }}</td>
+                      <td>₹{{ "%.2f"|format(bill.amount) }}</td>
+                      <td>{{ bill.doctor_name }}</td>
+                      <td>
+                        <form
+                          method="POST"
+                          action="{{ url_for('mark_bill_paid', bill_id=bill.bill_id) }}"
+                          class="d-inline"
+                        >
+                          <button type="submit" class="btn btn-sm btn-success">
+                            Mark as Paid
+                          </button>
+                        </form>
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+              {% else %}
+              <p class="text-muted">No unpaid bills.</p>
+              {% endif %}
+            </div>
+            <div class="tab-pane fade" id="paid">
+              {% if paid_bills %}
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Bill ID</th>
+                      <th>Patient</th>
+                      <th>Service Date</th>
+                      <th>Payment Date</th>
+                      <th>Amount (₹)</th>
+                      <th>Doctor</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for bill in paid_bills %}
+                    <tr>
+                      <td>{{ bill.bill_id }}</td>
+                      <td>{{ bill.patient_name }}</td>
+                      <td>{{ bill.bill_date.strftime('%Y-%m-%d') }}</td>
+                      <td>
+                        {{ bill.paid_date.strftime('%Y-%m-%d') if bill.paid_date
+                        else '-' }}
+                      </td>
+                      <td>₹{{ "%.2f"|format(bill.amount) }}</td>
+                      <td>{{ bill.doctor_name }}</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+              {% else %}
+              <p class="text-muted">No paid bills.</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

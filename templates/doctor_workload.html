@@ -1,0 +1,77 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h2>Doctor's Workload</h2>
+        </div>
+    </div>
+
+    <div class="row">
+        {% for doctor in doctors %}
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>{{ doctor.doctor_name }}</h5>
+                    <small class="text-muted">{{ doctor.specialization }} - {{ doctor.department_name }}</small>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Today's Schedule</h6>
+                            <p>Scheduled: {{ doctor.today_scheduled }}</p>
+                            <p>Completed: {{ doctor.today_completed }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>This Week</h6>
+                            <p>Total Appointments: {{ doctor.week_total }}</p>
+                            <p>Completion Rate: {{ "%.1f"|format(doctor.completion_rate) }}%</p>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <a href="#" class="btn btn-sm btn-primary" data-bs-toggle="collapse" 
+                           data-bs-target="#schedule-{{ doctor.doctor_id }}">
+                            View Schedule
+                        </a>
+                    </div>
+                    <div class="collapse mt-3" id="schedule-{{ doctor.doctor_id }}">
+                        {% if doctor.upcoming_appointments %}
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Patient</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>                                {% for apt in doctor.upcoming_appointments %}
+                                <tr>
+                                    <td>
+                                        {% if apt.appointment_date %}
+                                            {{ apt.appointment_date.strftime('%Y-%m-%d %H:%M') }}
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ apt.patient_name or '-' }}</td>
+                                    <td>
+                                        <span class="badge bg-{% if apt.status == 'Scheduled' %}primary{% elif apt.status == 'Completed' %}success{% else %}warning{% endif %}">
+                                            {{ apt.status or 'Unknown' }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% else %}
+                        <p class="text-muted">No upcoming appointments</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

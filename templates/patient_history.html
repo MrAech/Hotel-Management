@@ -1,0 +1,69 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h2>Medical History - {{ patient_name }}</h2>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            {% if history %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Visit Date</th>
+                            <th>Doctor</th>
+                            <th>Diagnosis</th>
+                            <th>Treatment</th>
+                            <th>Bill Amount</th>
+                            <th>Payment Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>                        {% for record in history %}
+                        <tr>
+                            <td>
+                                {% if record.visit_date %}
+                                    {{ record.visit_date.strftime('%Y-%m-%d') }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td>{{ record.doctor_name or '-' }}</td>
+                            <td>{{ record.diagnosis or '-' }}</td>
+                            <td>{{ record.treatment or '-' }}</td>
+                            <td>
+                                {% if record.bill_amount %}
+                                    ₹{{ "%.2f"|format(record.bill_amount) }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if record.payment_status %}
+                                    <span class="badge bg-{{ 'success' if record.payment_status == 'Paid' else 'warning' }}">
+                                        {{ record.payment_status }}
+                                    </span>
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-muted">No medical history found for this patient.</p>
+            {% endif %}
+
+            <div class="mt-3">
+                <a href="{{ url_for('list_patients') }}" class="btn btn-secondary">Back to Patients</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

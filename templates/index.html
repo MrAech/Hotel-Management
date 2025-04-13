@@ -1,0 +1,81 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h2>Hospital Dashboard</h2>
+        </div>
+        <div class="col text-end">
+            <a href="{{ url_for('schedule_appointment') }}" class="btn btn-primary">
+                Schedule Appointment
+            </a>
+        </div>
+    </div>
+
+    <!-- Upcoming Appointments -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4>Upcoming Appointments</h4>
+        </div>
+        <div class="card-body">
+            {% if appointments %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Date & Time</th>
+                            <th>Patient</th>
+                            <th>Doctor</th>
+                            <th>Department</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for apt in appointments %}
+                        <tr>
+                            <td>{{ apt.appointment_date.strftime('%Y-%m-%d %H:%M') }}</td>
+                            <td>{{ apt.patient_name }}</td>
+                            <td>{{ apt.doctor_name }}</td>
+                            <td>{{ apt.department_name }}</td>
+                            <td>
+                                <span class="badge bg-{% if apt.status == 'Scheduled' %}primary{% elif apt.status == 'Completed' %}success{% else %}danger{% endif %}">
+                                    {{ apt.status }}
+                                </span>
+                            </td>
+                            <td>
+                                {% if apt.status == 'Scheduled' %}
+                                <form action="{{ url_for('cancel_appointment', appointment_id=apt.appointment_id) }}" 
+                                      method="POST" class="d-inline">
+                                    <button type="submit" class="btn btn-sm btn-danger" 
+                                            onclick="return confirm('Are you sure you want to cancel this appointment?')">
+                                        Cancel
+                                    </button>
+                                </form>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-muted">No upcoming appointments.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Auto-hide alerts after 5 seconds
+    setTimeout(function() {
+        document.querySelectorAll('.alert').forEach(function(alert) {
+            var bsAlert = new bootstrap.Alert(alert);
+            bsAlert.close();
+        });
+    }, 5000);
+</script>
+{% endblock %}
