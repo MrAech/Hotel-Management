@@ -296,6 +296,8 @@ VALUES (
         'Unpaid'
     );
 
+
+
 -- Views
 
 CREATE VIEW active_doctors_view AS
@@ -343,6 +345,8 @@ FROM
     LEFT JOIN doctor d ON mr.doctor_id = d.doctor_id
     LEFT JOIN billing b ON p.patient_id = b.patient_id;
 
+
+
 -- Functions
 
 DELIMITER / /
@@ -365,6 +369,9 @@ BEGIN
 
     RETURN count_appointments;
 END //
+
+
+
 
 -- Procedures
 
@@ -452,6 +459,8 @@ BEGIN
     WHERE appointment_id = p_appointment_id;
     COMMIT;
 END //
+
+
 
 -- Triggers
 
