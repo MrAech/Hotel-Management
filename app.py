@@ -587,3 +587,9 @@ def delete_patient(patient_id):
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+
+# Happy Sharma
+# 23BCS10596
+# DBMS
+

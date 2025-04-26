@@ -1,3 +1,10 @@
+# Happy Sharma
+# 23BCS10596
+# DBMS
+
+
+
+
 # 🏨 Hotel Management System
 
 The **Hotel Management System** is a comprehensive application designed to streamline hotel operations, including **booking management**, **customer service**, and **database operations**.
